@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Springs Library — Community Library &amp; Reading Rooms</title>
+<meta name="description" content="A community library built around the old spring house — reading rooms, local history archives, and programs for every age.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#25454A;
+    --sage:#5C7A5E;
+    --amber:#C99A44;
+    --paper:#F6F1E3;
+    --cream:#EFE7D2;
+    --ink:#22241E;
+    --ink-60: rgba(34,36,30,0.62);
+    --ink-30: rgba(34,36,30,0.26);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{font-family:'Spectral', serif; font-weight:500;}
+  .mono{
+    font-family:'IBM Plex Mono', monospace;
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    font-size:0.7rem;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 clamp(20px,5vw,60px);}
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  /* ---------- signature: ripple rule ---------- */
+  .ripple-rule{
+    width:100%; height:30px;
+    background-repeat:repeat-x; background-size:60px 30px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='30' viewBox='0 0 60 30'><circle cx='30' cy='15' r='4' fill='none' stroke='%23C99A44' stroke-width='1'/><circle cx='30' cy='15' r='10' fill='none' stroke='%23C99A44' stroke-width='1' opacity='0.5'/><circle cx='30' cy='15' r='16' fill='none' stroke='%23C99A44' stroke-width='1' opacity='0.25'/></svg>");
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    background:rgba(246,241,227,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(34,36,30,0.1);
+  }
+  nav{display:flex; align-items:center; justify-content:space-between; padding:16px clamp(20px,5vw,60px);}
+  .logo{display:flex; align-items:center; gap:12px; font-family:'Spectral',serif; font-size:1.14rem;}
+  .logo-mark{width:32px; height:32px;}
+  .logo em{font-style:italic; color:var(--teal);}
+  .nav-links{display:flex; gap:28px; align-items:center;}
+  .nav-links a{font-family:'IBM Plex Mono', monospace; font-size:0.67rem; text-transform:uppercase; letter-spacing:0.1em; position:relative; padding-bottom:3px;}
+  .nav-links a::after{content:''; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--teal); transition:width .3s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-cta{
+    background:var(--teal); color:var(--paper);
+    padding:10px 20px; font-family:'IBM Plex Mono',monospace; font-size:0.65rem;
+    text-transform:uppercase; letter-spacing:0.1em;
+  }
+  .nav-toggle{display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer;}
+  .nav-toggle span{width:22px; height:1.5px; background:var(--ink);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative; min-height:94vh;
+    display:flex; align-items:center;
+    padding-top:110px;
+    background:var(--teal); color:var(--paper);
+    overflow:hidden;
+  }
+  .hero-ripples{
+    position:absolute; inset:0; overflow:hidden;
+  }
+  .hero-ripples span{
+    position:absolute; border-radius:50%; border:1px solid rgba(246,241,227,0.14);
+  }
+  .hero-inner{position:relative; z-index:2;}
+  .eyebrow{display:flex; align-items:center; gap:14px; color:var(--amber); margin-bottom:24px;}
+  .eyebrow::before{content:''; width:32px; height:1px; background:var(--amber);}
+  .hero h1{font-size:clamp(2.6rem,6vw,4.6rem); line-height:1.08; max-width:780px;}
+  .hero h1 i{font-style:italic; color:var(--amber);}
+  .hero-sub{margin-top:28px; max-width:500px; font-size:1.06rem; line-height:1.8; color:rgba(246,241,227,0.78);}
+  .hero-cta{margin-top:40px; display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    display:inline-block; padding:15px 28px;
+    font-family:'IBM Plex Mono',monospace; font-size:0.7rem;
+    text-transform:uppercase; letter-spacing:0.13em;
+    background:var(--amber); color:var(--teal); border:1px solid var(--amber);
+    transition:background .3s ease, color .3s ease;
+  }
+  .btn:hover{background:transparent; color:var(--amber);}
+  .btn-line{background:transparent; color:var(--paper); border:1px solid rgba(246,241,227,0.35);}
+  .btn-line:hover{background:rgba(246,241,227,0.1);}
+
+  .hero-facts{
+    margin-top:70px; padding-top:26px; border-top:1px solid rgba(246,241,227,0.16);
+    display:flex; gap:clamp(28px,6vw,60px); flex-wrap:wrap;
+  }
+  .fact-num{font-family:'Spectral',serif; font-size:1.7rem; color:var(--amber);}
+  .fact-label{margin-top:4px; color:rgba(246,241,227,0.55); font-size:0.68rem; font-family:'IBM Plex Mono',monospace; text-transform:uppercase; letter-spacing:0.08em;}
+
+  /* ---------- section shell ---------- */
+  section{padding:110px 0;}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; gap:36px; margin-bottom:58px; flex-wrap:wrap;}
+  .section-head .mono{color:var(--teal); display:block; margin-bottom:12px;}
+  .section-head h2{font-size:clamp(2rem,4.2vw,3rem); max-width:560px;}
+  .section-head p{max-width:320px; color:var(--ink-60); line-height:1.7; font-size:0.94rem;}
+
+  /* ---------- collections ---------- */
+  .collections{background:var(--paper);}
+  .col-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:2px; background:rgba(34,36,30,0.14);}
+  .col-card{background:var(--paper); padding:36px 26px; transition:background .3s ease;}
+  .col-card:hover{background:var(--cream);}
+  .col-spine{
+    display:flex; gap:3px; margin-bottom:20px; height:28px; align-items:flex-end;
+  }
+  .col-spine i{display:block; width:5px; background:var(--sage); border-radius:1px;}
+  .col-card h3{font-size:1.1rem; margin-bottom:10px;}
+  .col-card p{font-size:0.86rem; color:var(--ink-60); line-height:1.65;}
+
+  /* ---------- about ---------- */
+  .about{background:var(--teal); color:var(--paper);}
+  .about-grid{display:grid; grid-template-columns:0.9fr 1.1fr; gap:70px; align-items:center;}
+  .about .mono{color:var(--amber);}
+  .about h2{font-size:clamp(2rem,4.2vw,3rem); margin:18px 0 22px;}
+  .about p{color:rgba(246,241,227,0.75); line-height:1.85; font-size:1.02rem; margin-bottom:18px;}
+  .about-figure{background:#1B3438; padding:34px; border:1px solid rgba(246,241,227,0.15);}
+  .about-quote{font-family:'Spectral',serif; font-style:italic; font-size:1.15rem; line-height:1.6;}
+  .about-quote span{display:block; margin-top:16px; font-family:'IBM Plex Mono',monospace; font-style:normal; font-size:0.66rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--amber);}
+
+  /* ---------- programs ---------- */
+  .programs{background:var(--paper);}
+  .pr-list{border-top:1px solid rgba(34,36,30,0.16);}
+  .pr-item{
+    display:grid; grid-template-columns:130px 1fr 1fr; gap:30px;
+    padding:30px 0; border-bottom:1px solid rgba(34,36,30,0.16); align-items:start;
+  }
+  .pr-time{font-family:'IBM Plex Mono',monospace; font-size:0.76rem; color:var(--teal); letter-spacing:0.04em; padding-top:4px;}
+  .pr-item h3{font-size:1.2rem; margin-bottom:6px;}
+  .pr-item p{color:var(--ink-60); font-size:0.92rem; line-height:1.7;}
+
+  /* ---------- quote band ---------- */
+  .band{background:var(--sage); color:var(--paper); padding:90px 0; text-align:center;}
+  .band h2{font-size:clamp(1.7rem,4vw,2.5rem); max-width:740px; margin:0 auto 20px; font-style:italic; font-weight:400;}
+  .band .mono{color:var(--cream); display:block; margin-top:16px;}
+
+  /* ---------- visit / hours ---------- */
+  .visit{background:var(--cream);}
+  .visit-grid{display:grid; grid-template-columns:1fr 1fr; gap:2px; background:rgba(34,36,30,0.14);}
+  .visit-card{background:var(--cream); padding:44px 36px;}
+  .visit-card h3{font-size:1.25rem; margin-bottom:20px;}
+  .hour-row{display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid rgba(34,36,30,0.1); font-size:0.92rem;}
+  .hour-row:last-child{border-bottom:none;}
+  .hour-row span:first-child{color:var(--ink-60);}
+
+  /* ---------- membership cta ---------- */
+  .membership{background:var(--paper);}
+  .mem-box{
+    background:var(--amber); color:var(--ink);
+    padding:clamp(46px,7vw,90px);
+    display:grid; grid-template-columns:1.2fr 1fr; gap:50px; align-items:center;
+  }
+  .mem-box h2{font-size:clamp(1.9rem,4vw,2.7rem); margin-bottom:16px; color:var(--teal);}
+  .mem-box p{color:rgba(34,36,30,0.75); line-height:1.75; max-width:420px;}
+  .m-form{background:rgba(37,69,74,0.08); border:1px solid rgba(37,69,74,0.22); padding:32px;}
+  .m-form .mono{color:var(--teal); display:block; margin-bottom:18px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:0.78rem; color:rgba(34,36,30,0.65); margin-bottom:6px;}
+  .field input, .field select{
+    width:100%; background:transparent; border:none; border-bottom:1px solid rgba(34,36,30,0.32);
+    color:var(--ink); font-family:'Karla',sans-serif; font-size:0.95rem; padding:8px 0; outline:none;
+  }
+  .m-form .btn{width:100%; text-align:center; margin-top:8px; background:var(--teal); border-color:var(--teal); color:var(--paper);}
+  .m-form .btn:hover{background:transparent; color:var(--teal);}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--teal); color:rgba(246,241,227,0.6); padding:64px 0 26px;}
+  .foot-grid{display:grid; grid-template-columns:1.3fr 1fr 1fr 1fr; gap:36px; padding-bottom:44px;}
+  .foot-brand .logo{color:var(--paper); margin-bottom:14px;}
+  .foot-brand p{font-size:0.86rem; line-height:1.7; max-width:270px;}
+  .foot-col .mono{color:var(--amber); display:block; margin-bottom:16px;}
+  .foot-col a{display:block; font-size:0.86rem; margin-bottom:9px; color:rgba(246,241,227,0.65);}
+  .foot-col a:hover{color:var(--paper);}
+  .foot-bottom{display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top:22px; border-top:1px solid rgba(246,241,227,0.16); font-size:0.76rem;}
+
+  @media (max-width:920px){
+    .nav-links{display:none;}
+    .nav-toggle{display:flex;}
+    .col-grid{grid-template-columns:repeat(2,1fr);}
+    .about-grid{grid-template-columns:1fr;}
+    .pr-item{grid-template-columns:90px 1fr;}
+    .pr-item p{grid-column:2/3;}
+    .visit-grid{grid-template-columns:1fr;}
+    .mem-box{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:560px){
+    .col-grid{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="wrap">
+    <div class="logo">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" fill="#25454A"/>
+        <circle cx="20" cy="20" r="4" fill="none" stroke="#C99A44" stroke-width="1"/>
+        <circle cx="20" cy="20" r="9" fill="none" stroke="#C99A44" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="20" cy="20" r="14" fill="none" stroke="#C99A44" stroke-width="0.6" opacity="0.35"/>
+      </svg>
+      the springs <em>library</em>
+    </div>
+    <div class="nav-links">
+      <a href="#collections">Collections</a>
+      <a href="#about">About</a>
+      <a href="#programs">Programs</a>
+      <a href="#visit">Visit</a>
+      <a href="#membership" class="nav-cta">Get a Card</a>
+    </div>
+    <button class="nav-toggle" aria-label="menu"><span></span><span></span><span></span></button>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-ripples">
+    <span style="width:400px;height:400px;top:-100px;right:-100px;"></span>
+    <span style="width:260px;height:260px;top:-30px;right:-30px;"></span>
+    <span style="width:600px;height:600px;bottom:-250px;left:-150px;"></span>
+  </div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow mono">Built beside the old spring house</div>
+    <h1>A library that still<br>runs on <i>quiet water</i>.</h1>
+    <p class="hero-sub">The Springs Library sits over the natural spring the town was named for. Inside: reading rooms, a full local history archive, and a children's wing that opens onto the spring garden.</p>
+    <div class="hero-cta">
+      <a href="#membership" class="btn">Get a Library Card</a>
+      <a href="#collections" class="btn btn-line">Browse Collections</a>
+    </div>
+    <div class="hero-facts">
+      <div><div class="fact-num">64,000</div><div class="fact-label">Titles in the collection</div></div>
+      <div><div class="fact-num">1892</div><div class="fact-label">Original spring house built</div></div>
+      <div><div class="fact-num">7</div><div class="fact-label">Reading rooms</div></div>
+      <div><div class="fact-num">Free</div><div class="fact-label">Membership, always</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="ripple-rule"></div>
+
+<section class="collections" id="collections">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="mono">The collection</span>
+        <h2>Something in every wing</h2>
+      </div>
+      <p>Browse by room, or ask the front desk — most of us have read more of the shelves than the catalog admits.</p>
+    </div>
+    <div class="col-grid reveal">
+      <div class="col-card">
+        <div class="col-spine"><i style="height:14px;"></i><i style="height:22px;"></i><i style="height:18px;"></i><i style="height:26px;"></i><i style="height:12px;"></i></div>
+        <h3>Fiction &amp; Literature</h3>
+        <p>General fiction, poetry, and a well-loved literary criticism shelf tucked in the back corner.</p>
+      </div>
+      <div class="col-card">
+        <div class="col-spine"><i style="height:20px;"></i><i style="height:12px;"></i><i style="height:24px;"></i><i style="height:16px;"></i><i style="height:22px;"></i></div>
+        <h3>Local History Archive</h3>
+        <p>Town records, photographs, and oral histories dating back to before the spring house was built.</p>
+      </div>
+      <div class="col-card">
+        <div class="col-spine"><i style="height:18px;"></i><i style="height:26px;"></i><i style="height:14px;"></i><i style="height:20px;"></i><i style="height:10px;"></i></div>
+        <h3>Children's Wing</h3>
+        <p>Picture books, early readers, and a story-time nook that faces directly onto the spring garden.</p>
+      </div>
+      <div class="col-card">
+        <div class="col-spine"><i style="height:24px;"></i><i style="height:16px;"></i><i style="height:20px;"></i><i style="height:12px;"></i><i style="height:18px;"></i></div>
+        <h3>Reference &amp; Research</h3>
+        <p>Quiet study desks, periodicals, and a librarian on hand for anything the catalog can't answer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="reveal">
+      <span class="mono">Why it's called The Springs</span>
+      <h2>The building was a spring house first</h2>
+      <p>Long before it held books, the building on this corner was the town's spring house — the covered structure that kept the water source clean and accessible. When the library needed a permanent home in the 1920s, the town simply built around it instead of tearing it down.</p>
+      <p>The original stone basin is still there, under glass, in the reading room we now call the Spring Room. It's usually the quietest seat in the building.</p>
+      <a href="#visit" class="btn btn-line">Plan Your Visit</a>
+    </div>
+    <div class="about-figure reveal">
+      <div class="about-quote">"We didn't build a library over a spring. We just finally put a roof over what was already there."<span>— From the 1923 dedication remarks</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="programs" id="programs">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="mono">This week</span>
+        <h2>Programs &amp; events</h2>
+      </div>
+      <p>Most programs are free and open to the public — a few ask for advance sign-up at the front desk.</p>
+    </div>
+    <div class="pr-list reveal">
+      <div class="pr-item">
+        <div class="pr-time">Mon · 10:00</div>
+        <h3>Toddler Story Time</h3>
+        <p>Songs, picture books, and a short craft in the Children's Wing. No sign-up needed.</p>
+      </div>
+      <div class="pr-item">
+        <div class="pr-time">Wed · 6:30pm</div>
+        <h3>Spring Room Book Club</h3>
+        <p>A different title each month, discussed over tea in the Spring Room. New members always welcome.</p>
+      </div>
+      <div class="pr-item">
+        <div class="pr-time">Thu · 4:00pm</div>
+        <h3>Local History Drop-In</h3>
+        <p>Bring an old photograph or a family name — our archivist will help you dig through the town records.</p>
+      </div>
+      <div class="pr-item">
+        <div class="pr-time">Sat · 11:00</div>
+        <h3>Repair Café</h3>
+        <p>Volunteers help fix small household items — a monthly tradition that started in the reference room.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap reveal">
+    <h2>"I've lived here forty years and I still learn something new every time I ask the archivist a question."</h2>
+    <span class="mono">— Longtime patron, Local History Archive</span>
+  </div>
+</section>
+
+<section class="visit" id="visit">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <span class="mono">Plan a visit</span>
+        <h2>Hours &amp; location</h2>
+      </div>
+      <p>Parking is available behind the building, off the garden entrance.</p>
+    </div>
+    <div class="visit-grid reveal">
+      <div class="visit-card">
+        <h3>Hours</h3>
+        <div class="hour-row"><span>Monday – Thursday</span><span>9:00am – 8:00pm</span></div>
+        <div class="hour-row"><span>Friday</span><span>9:00am – 6:00pm</span></div>
+        <div class="hour-row"><span>Saturday</span><span>10:00am – 5:00pm</span></div>
+        <div class="hour-row"><span>Sunday</span><span>1:00pm – 5:00pm</span></div>
+      </div>
+      <div class="visit-card">
+        <h3>Getting here</h3>
+        <div class="hour-row"><span>Address</span><span>4 Spring House Lane</span></div>
+        <div class="hour-row"><span>Parking</span><span>Free, rear garden lot</span></div>
+        <div class="hour-row"><span>Bus route</span><span>Line 6, Library stop</span></div>
+        <div class="hour-row"><span>Accessibility</span><span>Step-free, all wings</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="membership" id="membership">
+  <div class="wrap">
+    <div class="mem-box reveal">
+      <div>
+        <h2>Getting a card takes five minutes</h2>
+        <p>Membership is free for anyone in the county. Bring ID and something with your current address, or start the paperwork online below.</p>
+      </div>
+      <div class="m-form">
+        <span class="mono">Start your card</span>
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" type="text" placeholder="Your name">
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="wing">Most interested in</label>
+          <select id="wing">
+            <option>Fiction &amp; Literature</option>
+            <option>Local History Archive</option>
+            <option>Children's Wing</option>
+            <option>Reference &amp; Research</option>
+          </select>
+        </div>
+        <button type="button" class="btn">Start My Membership</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">the springs <em style="font-style:italic;color:var(--amber);">library</em></div>
+        <p>A community library built around the town's original spring house, open to all, free to join.</p>
+      </div>
+      <div class="foot-col">
+        <span class="mono">Visit</span>
+        <a href="#collections">Collections</a>
+        <a href="#programs">Programs &amp; events</a>
+        <a href="#visit">Hours &amp; location</a>
+      </div>
+      <div class="foot-col">
+        <span class="mono">Membership</span>
+        <a href="#membership">Get a card</a>
+        <a href="#">Renew online</a>
+        <a href="#">Interlibrary loan</a>
+      </div>
+      <div class="foot-col">
+        <span class="mono">About</span>
+        <a href="#about">Our history</a>
+        <a href="#">Support the library</a>
+        <a href="#">Volunteer</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 The Springs Library. A free public library.</span>
+      <span>thespringslibrary.shop</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:0.15});
+  revealEls.forEach(el=>io.observe(el));
+
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  toggle?.addEventListener('click', ()=>{
+    const open = links.style.display === 'flex';
+    links.style.display = open ? 'none' : 'flex';
+    links.style.cssText += open ? '' : 'position:fixed;top:64px;left:0;right:0;background:#F6F1E3;flex-direction:column;padding:24px;gap:18px;border-bottom:1px solid rgba(34,36,30,0.1);';
+  });
+</script>
+
+</body>
+</html>
